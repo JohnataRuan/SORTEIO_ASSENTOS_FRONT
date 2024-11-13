@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="Pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="principal.css">
+    <script src="principal.js" type="module"></script>
+    <link rel="shortcut icon" type="imagex/png" href="/Assets/Imagens/logo.png">
+    <title>Mapa de Sala - Lourdinas </title>
+</head>
+
+<body>
+    
+   <!-- Titulo e Descrição do funcionamento da primeira página -->
+   <h1 id="h1">Realize Sorteio de Assentos com Facilidade</h1>
+   <p class="texto-mapa">
+    Este sistema permite que você realize o sorteio de assentos de forma fácil e prática. <br>
+    Com ele, é possível sortear as salas de forma aleatória, gerar listas de presença para cada sala, 
+    criar um mapa visual com a posição de cada aluno e gerar uma lista detalhada com a localização de cada aluno em cada sala.
+</p>
+   <!-- Botão de importar arquivos seus elementos-->
+    <div class = "BotaoImportarArquivos" id="BotaoImportarArquivos">
+        <img src = '/Assets/Icones/mdi--file-import.svg' alt="icone importar" class = "IconeImport">
+            <div class = 'textos_importar'>
+                <h2 class = 'Importar'>Importação de Arquivos</h2>
+                <p class ='descricao_import'>Para iniciar o sorteio de assentos, você pode importar uma planilha no formato CSV contendo os nomes dos alunos e suas respectivas turmas. O sistema usará essa lista para gerar o mapa de assentos e organizar os estudantes nas salas correspondentes.</p>
+            </div>
+        </div>
+    <!-- Botão de Download do Sorteio e seus elementos -->
+   <div class = "BotaoDownload" id="BotaoDownload">
+    <img src = '/Assets/Icones/mdi--file-download.svg' alt="icone config" class = "IconeDownload">
+        <div class = 'textos_download'>
+            <h2 class = 'download'>Download de Arquivos</h2>
+            <p class="descricao_download">
+                Baixe os arquivos do sorteio de turmas conforme as configurações selecionadas. 
+                Para realizar o sorteio, selecione ao menos duas salas. 
+                Observação: turmas do Ensino Médio e Ensino Fundamental não podem ser misturadas.
+            </p>
+        </div>
+    </div>
+    <div class="erro" id="erro" style="display: none;">
+        <h2 class="tituloErro" id="tituloErro">Título Erro</h2>
+        <img src="../../Assets/Icones/ph--x-bold.svg" class="iconeX" id="iconeX" onclick="fecharErro()">
+        <p class='mensagemErro' id='mensagemErro'>Lorem ipsum dolor sit amet.</p>
+    </div>
+</body>
+</html>
+
