@@ -58,6 +58,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+  // Função para exibir o pop-up
+  function mostrarPopup(mensagem, tipo) {
+    const popup = document.getElementById('popup');
+    const popupMessage = document.getElementById('popupMessage');
+    const popupIcon = document.getElementById('popupIcon');
+
+    popupMessage.textContent = mensagem;
+    if (tipo === 'success') {
+        popup.className = 'popup popup-success show';
+        popupIcon.textContent = '✔️';
+    } else if (tipo === 'error') {
+        popup.className = 'popup popup-error show';
+        popupIcon.textContent = '❌';
+    }
+
+    setTimeout(fecharPopup, 4000);
+}
+
+// Função para fechar o pop-up
+function fecharPopup() {
+    const popup = document.getElementById('popup');
+    popup.classList.remove('show');
+}
+
                 // Parte Responsável pela exibição dos CheckBoxs no HTML
 
 const salasEnsinoMedio = [];
@@ -155,6 +179,7 @@ function verificarMisturaEnsinos(salaSelecionada) {
 
     // Se a salaSelecionada for do ensino fundamental e já houver salas do ensino médio
     if (ensinoFundamental.includes(salaSelecionada.serie) && salasEnsinoMedio.length > 0) {
+        
         return true;
     }
 
@@ -200,7 +225,7 @@ function adicionarSalasNoHtml(sala, containerId) {
             // Verifica se há mistura entre ensino médio e fundamental
             if (verificarMisturaEnsinos(salaSelecionada)) {
                 novaSala.checked = false; // Desmarca o checkbox se houver mistura
-                mostrarErro('Não misture os Ensinos', "Turmas do ensino médio e fundamental não devem ser misturadas");
+                mostrarPopup("Não misture os Ensinos", "Turmas do ensino médio e fundamental não devem ser misturadas",'error');
                 return; // Impede a adição ao array
             }
 
@@ -243,14 +268,14 @@ function adicionarSalasnoHtmlFundamental(sala) {
 // Função para exibir uma mensagem caso nenhuma sala seja importada
 function exibirMensagemBancoVazio() {
     const barraDownload = document.querySelector('.Barra-download');
+    mostrarPopup("Nenhuma sala foi importada", 'error');
 
     // Cria e exibe a mensagem de "Nenhuma Sala foi Importada"
     const textoNaoImportado = document.createElement('div');
     textoNaoImportado.className = 'textoNaoImportado';
-
-    // Conteúdo da mensagem
+  
     textoNaoImportado.innerHTML = `
-        <h3>Nenhuma Sala foi Importada.</h3>
+        <h2>Nenhuma Sala foi Importada.</h2>
         <br>
         <p class="texto-naoImportado">
             Importe salas na página de 
@@ -290,8 +315,8 @@ function adicionarEtiquetasEnsino() {
 // Exemplo de como executar a função ao clicar no botão
 document.getElementById('sortear').addEventListener('click', async function (event) {
     event.preventDefault();
-    if(salasSelecionadas.length < 2){
-        mostrarErro('Numero de Salas insuficiente','Selecione no minimo duas salas para realizar um sorteio.')
+    if(salasSelecionadas.length <2){
+        mostrarPopup("Numero de Salas insuficiente,Selecione no minimo duas salas para realizar um sorteio.", 'error');
     }else{
         const arraysDasSalas = await sortearAlunos(salasSelecionadas);
     const salasSelecionadasArray = arraysDasSalas.salasSelecionadas;
@@ -527,6 +552,7 @@ async function sortearAlunos(salasSelecionadas) {
 
     } catch (error) {
         console.error('Erro ao buscar PDFs:', error);
+        mostrarPopup("Erro ao buscar PDFs", 'error');
     }
 }
 
@@ -546,7 +572,8 @@ async function gerarListaAssinatura(dadosNuvem, nomeSala) {
         // Verifica se a resposta foi bem-sucedida
         if (!response.ok) {
             throw new Error('Erro ao comunicar com o servidor para gerar o PDF');
-        }
+            
+        } mostrarPopup("Erro ao buscar PDFs", 'error');
 
         // Converte a resposta em um Blob e cria um link para download
         const blob = await response.blob();

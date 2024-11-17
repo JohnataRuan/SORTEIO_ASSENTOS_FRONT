@@ -14,7 +14,7 @@ document.getElementById('salvar').addEventListener('click', (event) => {
 });
 document.getElementById('salvar').addEventListener('click', (event) => {
     event.preventDefault(); // Previne o recarregamento da página
-    importarTurma();
+    importarTurma();   
 });
 
 //importar cabeçalho
