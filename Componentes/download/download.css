@@ -85,52 +85,71 @@ h2{
     display: flex;
     flex-direction: column;
 }
-/*Config de aparencia dos selects que o usuário selecionar*/
+
+/* Configuração para exibir os checkboxes de forma horizontal e permitir quebra de linha */
 .checkboxs {
     order: -1;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap; /* Permite que os checkboxes que não couberem na linha atual quebrem para a próxima */
     font-family: 'Inter';
     font-weight: 800;
     font-size: 25px;
     align-items: center;
     color: #2D2926;
-    gap: 60px; /* espaço entre as seções */
+    gap: 15px; /* Espaço entre os checkboxes */
     border-bottom: 5%;
+    margin-bottom: 0; /* Remover margem extra do container */
 }
 
+/* Estilo para os checkboxes */
 input[type="checkbox"] {
     transform: scale(2);
     margin-left: 7%;
     cursor: pointer;
 }
+
+/* Estilo para os títulos das seções */
 .ensinoMedio,
 .ensinoFundamental {
     order: -1;
-    font-size: 35px; /* Aumenta o tamanho da fonte */
-    font-weight: 600; /* Deixa o texto em negrito */
+    font-size: 35px;
+    font-weight: 600;
     width: 100%;
-    text-align: center; /* Centraliza o texto */
-    margin-bottom: 10px; /* Adiciona margem abaixo para separar dos checkboxes */
-    margin-top: 0px; /* Adiciona margem acima para dar espaço entre os títulos e o conteúdo anterior */
-    color: #333; /* Define uma cor para o texto */
-}
-#checkbox1, #checkbox2 {
-    display: flex;
-    flex-wrap: wrap; /* Permite quebrar a linha */
-    justify-content: center; /* Centraliza os checkboxes */
-    gap: 20px; /* Espaço entre os checkboxes */
-    align-items: center; /* Centraliza verticalmente */
-    max-width: 100%; /* Garante que não ultrapasse o limite do container */
-    margin-bottom: 5%;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    color: #333;
 }
 
+/* Estilo para os containers de checkboxes (checkbox1 e checkbox2) */
+#checkbox1, #checkbox2 {
+    display: flex;
+    flex-wrap: wrap; /* Permite a quebra de linha entre os checkboxes */
+    justify-content: flex-start; /* Alinha os checkboxes à esquerda */
+    gap: 15px; /* Espaço entre os checkboxes */
+    align-items: center; /* Alinha verticalmente */
+    max-width: 100%;
+    margin-bottom: 2%; /* Certifique-se de que a margem é a mesma para ambos os containers */
+    flex-grow: 0; /* Impede que o container cresça além do necessário */
+    height: auto; /* Garantir que a altura do container não cresça excessivamente */
+}
+
+/* Estilo para cada item (checkbox + label) */
 .item {
-    display: flex; /* Permite que o checkbox e o label fiquem na mesma linha */
-    align-items: center; /* Centraliza verticalmente */
-    justify-content: center; /* Centraliza horizontalmente */
-    text-align: center; /* Centraliza o texto */
-    flex: 1 1 30%; /* Permite que cada item ocupe um terço do espaço (ou o que for necessário) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1 0 30%; /* Permite até 3 itens por linha */
+    max-width: 30%; /* Garante que não ultrapasse 3 itens por linha */
+    margin-bottom: 10px;
+}
+
+/* Responsividade para telas menores (max-width: 600px) */
+@media (max-width: 600px) {
+    .item {
+        flex: 1 0 48%; /* 2 itens por linha em telas pequenas */
+    }
 }
 
 label {
@@ -246,7 +265,7 @@ label {
     display: flex;
     gap: 10px; /* Espaço entre os botões */
     justify-content: center;
-    margin-top: 10%; /* Ajuste conforme necessário */
+    margin-top: 5%; /* Ajuste conforme necessário */
     border: none;
     flex-direction: row;
     align-self: start;
@@ -263,7 +282,8 @@ label {
     height: 50px; /* Altura fixa para compactar */
     border-radius: 5px;
     font-size: 16px;
-    font-weight: bold;
+    font-family: "Inter";
+    font-weight: 800;
     color: #0253A4;
     border: none;
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
@@ -284,7 +304,8 @@ label {
     height: 50px;
     border-radius: 5px;
     font-size: 16px;
-    font-weight: bold;
+    font-family: "Inter";
+    font-weight: 800;
     color: #F7F7F7;
     border: none;
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
@@ -306,7 +327,8 @@ label {
     height: 50px;
     border-radius: 5px;
     font-size: 16px;
-    font-weight: bold;
+    font-family: "Inter";
+    font-weight: 800;
     color: #F7F7F7;
     border: none;
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);

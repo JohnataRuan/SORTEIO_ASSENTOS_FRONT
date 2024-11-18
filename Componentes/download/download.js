@@ -119,26 +119,6 @@ document.getElementById('bntNao').addEventListener('click',function(event){
 });
 
 
-    //Funções da mensagem de Error
-function mostrarErro(titulo, mensagem) {
-    const tituloElemento = document.getElementById('tituloErro');
-    const mensagemElemento = document.getElementById('mensagemErro');
-    const erroElemento = document.getElementById('erro');
-
-    // Atualiza os elementos com os dados da mensagem
-    tituloElemento.textContent = titulo;
-    mensagemElemento.textContent = mensagem;
-
-    // Torna o elemento de erro visível
-    erroElemento.style.display = 'block';
-}
-
-    // Função para fechar a mensagem de erro
-function fecharErro() {
-    const erroElemento = document.getElementById('erro');
-    erroElemento.style.display = 'none';
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('iconeX').addEventListener('click', fecharErro);
 });
@@ -172,18 +152,19 @@ function verificarMisturaEnsinos(salaSelecionada) {
     const salasEnsinoMedio = salasSelecionadas.filter(s => ensinoMedio.includes(s.serie));
     const salasEnsinoFundamental = salasSelecionadas.filter(s => ensinoFundamental.includes(s.serie));
 
-    // Se a salaSelecionada for do ensino médio e já houver salas do ensino fundamental
+    // Verifica se a salaSelecionada é do ensino médio e se já há salas do ensino fundamental
     if (ensinoMedio.includes(salaSelecionada.serie) && salasEnsinoFundamental.length > 0) {
-        return true;
+        mostrarPopup('Não é permitido selecionar salas do ensino médio com salas do ensino fundamental.', 'error');
+        return false;
     }
 
-    // Se a salaSelecionada for do ensino fundamental e já houver salas do ensino médio
+    // Verifica se a salaSelecionada é do ensino fundamental e se já há salas do ensino médio
     if (ensinoFundamental.includes(salaSelecionada.serie) && salasEnsinoMedio.length > 0) {
-        
-        return true;
+        mostrarPopup('Não é permitido selecionar salas do ensino fundamental com salas do ensino médio.', 'error');
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 // Função genérica para adicionar as salas no HTML
@@ -223,9 +204,8 @@ function adicionarSalasNoHtml(sala, containerId) {
         // Verifica se há mistura antes de adicionar ou remover
         if (novaSala.checked) {
             // Verifica se há mistura entre ensino médio e fundamental
-            if (verificarMisturaEnsinos(salaSelecionada)) {
+            if (!verificarMisturaEnsinos(salaSelecionada)) {
                 novaSala.checked = false; // Desmarca o checkbox se houver mistura
-                mostrarPopup("Não misture os Ensinos", "Turmas do ensino médio e fundamental não devem ser misturadas",'error');
                 return; // Impede a adição ao array
             }
 
@@ -572,8 +552,8 @@ async function gerarListaAssinatura(dadosNuvem, nomeSala) {
         // Verifica se a resposta foi bem-sucedida
         if (!response.ok) {
             throw new Error('Erro ao comunicar com o servidor para gerar o PDF');
-            
-        } mostrarPopup("Erro ao buscar PDFs", 'error');
+            mostrarPopup("Erro ao buscar PDFs", 'error');
+        } 
 
         // Converte a resposta em um Blob e cria um link para download
         const blob = await response.blob();

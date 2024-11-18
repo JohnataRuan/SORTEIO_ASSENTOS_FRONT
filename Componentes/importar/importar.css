@@ -136,6 +136,8 @@ select {
 .voltar {
     order: 1;
     display: flex;
+    font-family: "Inter";
+    font-weight: 800;
     justify-content: center; /* Centraliza o texto */
     align-items: center; /* Centraliza o texto verticalmente */
     background-color: #FFFFFF;
@@ -158,6 +160,8 @@ select {
 .importar {
     order: 2;
     display: flex;
+    font-family: "Inter";
+    font-weight: 800;
     justify-content: center; /* Centraliza o texto */
     align-items: center; /* Centraliza o texto verticalmente */
     width: 100px; /* Ajuste de largura para 100px */
@@ -170,8 +174,6 @@ select {
     cursor: pointer;
     transition: transform 0.5s ease;
     position: relative;
-    font-family: "Inter";
-    font-weight: bold;
     text-align: center;
     justify-content: center;
     border: 1px solid transparent;
@@ -193,7 +195,8 @@ select {
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    font-weight: bold;
+    font-family: "Inter";
+    font-weight: 800;
     color: #F7F7F7;
     cursor: pointer;
 }
@@ -215,6 +218,8 @@ select {
     padding: 0; /* Removendo padding específico */
     border-radius: 5px;
     font-size: 16px;
+    font-family: "Inter";
+    font-weight: 800;
     color: #F7F7F7;
     border: 1px solid transparent;
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);

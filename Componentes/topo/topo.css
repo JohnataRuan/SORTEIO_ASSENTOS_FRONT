@@ -145,6 +145,10 @@ ul{
 .iconeArquivoImportados{
     margin-left: 5px;
 }
+.arqImport{
+    font-family: "Inter";
+    font-weight: 800;
+}
 /*Configuração da barra informativa que mostra as salas já importadas, a qual só é presente ao clickar o usuário*/
 .barraInformativa {
     position: absolute;
