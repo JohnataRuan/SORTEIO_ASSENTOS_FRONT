@@ -128,53 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-//Conexões com o banco de dados
-document.addEventListener('DOMContentLoaded', function() {
-    const uploadFile = async (event) => {
-        event.preventDefault(); 
 
-        const fileInput = document.getElementById('fileInput');
-        const ensino = document.getElementById('tipoEnsino');
-        const serieSelect = document.getElementById('qualSerie');
-        const turmaSelect = document.getElementById('turmaDesejada');
-        const formData = new FormData();
-        
-        if (!fileInput.files[0]) {
-            console.error('Nenhum arquivo selecionado.');
-            mostrarPopup("Nenhum arquivo foi selecionado", 'error');
-            return false;
-        }
-
-        formData.append('file', fileInput.files[0]);
-        formData.append('ensino', ensino.value);
-        formData.append('serie', serieSelect.value);
-        formData.append('turma', turmaSelect.value);
-
-        try {
-            // Chama a função fetchComToken para enviar o arquivo e os dados com o token
-            const response = await fetchComToken('http://localhost:3000/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response) { // Se a resposta for bem-sucedida
-                console.log('Arquivo enviado com sucesso!');
-                mostrarPopup("Arquivo enviado com sucesso!", 'success');
-            } else {
-                mostrarErro('Erro ao enviar arquivo');
-                mostrarPopup("Erro ao enviar arquivo", 'error');
-            }
-        } catch (error) {
-            mostrarErro('Erro ao fazer upload', error);
-            mostrarPopup("Erro ao enviar arquivo", 'error');
-        }
-    };
-
-    // Adiciona o evento ao botão de envio
-    document.getElementById('uploadButton').addEventListener('click', uploadFile);
-});
-
-    
     // Função para exibir o pop-up
 function mostrarPopup(mensagem, tipo) {
     const popup = document.getElementById('popup');
@@ -198,42 +152,62 @@ function fecharPopup() {
     const popup = document.getElementById('popup');
     popup.classList.remove('show');
 }
-    // Associa a função de upload ao botão "Salvar"
-    document.getElementById('salvar').addEventListener('click', uploadFile);
 
+// Requisição para fazer o upload do CSV e mandar para o banco de dados
+document.addEventListener('DOMContentLoaded', function () {
+    const uploadFile = async (event) => {
+        event.preventDefault();
 
+        const fileInput = document.getElementById('fileInput');
+        const ensino = document.getElementById('tipoEnsino');
+        const serieSelect = document.getElementById('qualSerie');
+        const turmaSelect = document.getElementById('turmaDesejada');
+        const formData = new FormData();
 
-//  Autenticação do token
-async function fetchComToken(url, options = {}) {
-    // Obtém o token do localStorage
-    const token = localStorage.getItem('token');
-
-    // Verifica se o token existe
-    if (!token) {
-        console.log('Usuário não autenticado!');
-        return; // Retorna ou lida com o erro de alguma forma
-    }
-
-    // Adiciona o cabeçalho Authorization com o token em todas as requisições
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...options.headers, // Adiciona os cabeçalhos extras que foram passados
-    };
-
-    // Realiza a requisição com os cabeçalhos configurados
-    try {
-        const response = await fetch(url, { ...options, headers });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.log('Erro:', data.error || 'Erro na requisição.');
+        // Verifica se um arquivo foi selecionado
+        if (!fileInput.files[0]) {
+            console.error('Nenhum arquivo selecionado.');
+            mostrarPopup("Nenhum arquivo foi selecionado", 'error');
             return;
         }
 
-        return data; // Retorna a resposta da requisição
-    } catch (error) {
-        console.error('Erro ao fazer a requisição:', error);
-    }
-}
+        formData.append('file', fileInput.files[0]);
+        formData.append('ensino', ensino.value);
+        formData.append('serie', serieSelect.value);
+        formData.append('turma', turmaSelect.value);
+
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error('Token não encontrado no local storage.');
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho
+                }
+            });
+
+            if (response.ok) {
+                console.log('Arquivo enviado com sucesso!');
+                mostrarPopup("Arquivo enviado com sucesso!", 'success');
+            } else {
+                console.error('Erro ao enviar arquivo:', response.statusText);
+                mostrarPopup("Erro ao enviar arquivo", 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao fazer upload:', error);
+            mostrarPopup("Erro ao enviar arquivo", 'error');
+        }
+    };
+
+    // Adicione o event listener para o formulário ou botão de upload
+    document.getElementById('salvar').addEventListener('click', uploadFile); // ID do formulário ou botão
+
+});

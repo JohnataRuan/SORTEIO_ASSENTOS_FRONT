@@ -229,7 +229,7 @@ select {
 .salvar:hover {
     transform: scale(1.05);
 }
-/* Estilos para a mensagem de erro */
+
 /* Estilos para o pop-up */
 .popup {
     position: fixed;

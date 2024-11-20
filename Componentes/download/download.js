@@ -119,6 +119,26 @@ document.getElementById('bntNao').addEventListener('click',function(event){
 });
 
 
+    //Funções da mensagem de Error
+function mostrarErro(titulo, mensagem) {
+    const tituloElemento = document.getElementById('tituloErro');
+    const mensagemElemento = document.getElementById('mensagemErro');
+    const erroElemento = document.getElementById('erro');
+
+    // Atualiza os elementos com os dados da mensagem
+    tituloElemento.textContent = titulo;
+    mensagemElemento.textContent = mensagem;
+
+    // Torna o elemento de erro visível
+    erroElemento.style.display = 'block';
+}
+
+    // Função para fechar a mensagem de erro
+function fecharErro() {
+    const erroElemento = document.getElementById('erro');
+    erroElemento.style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('iconeX').addEventListener('click', fecharErro);
 });
@@ -152,19 +172,18 @@ function verificarMisturaEnsinos(salaSelecionada) {
     const salasEnsinoMedio = salasSelecionadas.filter(s => ensinoMedio.includes(s.serie));
     const salasEnsinoFundamental = salasSelecionadas.filter(s => ensinoFundamental.includes(s.serie));
 
-    // Verifica se a salaSelecionada é do ensino médio e se já há salas do ensino fundamental
+    // Se a salaSelecionada for do ensino médio e já houver salas do ensino fundamental
     if (ensinoMedio.includes(salaSelecionada.serie) && salasEnsinoFundamental.length > 0) {
-        mostrarPopup('Não é permitido selecionar salas do ensino médio com salas do ensino fundamental.', 'error');
-        return false;
+        return true;
     }
 
-    // Verifica se a salaSelecionada é do ensino fundamental e se já há salas do ensino médio
+    // Se a salaSelecionada for do ensino fundamental e já houver salas do ensino médio
     if (ensinoFundamental.includes(salaSelecionada.serie) && salasEnsinoMedio.length > 0) {
-        mostrarPopup('Não é permitido selecionar salas do ensino fundamental com salas do ensino médio.', 'error');
-        return false;
+        
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 // Função genérica para adicionar as salas no HTML
@@ -204,8 +223,9 @@ function adicionarSalasNoHtml(sala, containerId) {
         // Verifica se há mistura antes de adicionar ou remover
         if (novaSala.checked) {
             // Verifica se há mistura entre ensino médio e fundamental
-            if (!verificarMisturaEnsinos(salaSelecionada)) {
+            if (verificarMisturaEnsinos(salaSelecionada)) {
                 novaSala.checked = false; // Desmarca o checkbox se houver mistura
+                mostrarPopup("Não misture os Ensinos", "Turmas do ensino médio e fundamental não devem ser misturadas",'error');
                 return; // Impede a adição ao array
             }
 
@@ -483,10 +503,32 @@ function organizaAlunos(array, serieAluno, turmaAluno) {
 
                     // Parte Responsável pelas Requisições
 
-// Requisição para fazer o Get apenas das salas e séries
+// Requisição para fazer o Get apenas das salas e séries com verificação de token
 async function fetchSalas() {
     try {
-        const response = await fetchComToken('http://localhost:3000/salas'); // Alterado para usar fetchComToken
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            return;
+        }
+
+        // Faz a requisição ao backend com o token no cabeçalho
+        const response = await fetch('http://localhost:3000/salas', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            console.log(`Erro na requisição: ${response.statusText}`);
+            return;
+        }
+
         const salas = await response.json();
 
         if (salas.length === 0) {
@@ -517,16 +559,35 @@ async function fetchSalas() {
 }
 
 
-// Requisição para sortear os alunos
+// Requisição para sortear os alunos com verificação de token
 async function sortearAlunos(salasSelecionadas) {
     try {
-        const response = await fetchComToken('http://localhost:3000/sortearAlunos', { // Alterado para usar fetchComToken
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
+            return;
+        }
+
+        // Faz a requisição ao backend com o token no cabeçalho
+        const response = await fetch('http://localhost:3000/sortearAlunos', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ salasSelecionadas })
+            body: JSON.stringify({ salasSelecionadas }),
         });
+
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            console.log(`Erro na requisição: ${response.statusText}`);
+            mostrarPopup("Erro ao realizar o sorteio", 'error');
+            return;
+        }
+
         const data = await response.json();
         return data;
 
@@ -539,21 +600,30 @@ async function sortearAlunos(salasSelecionadas) {
 // Requisição Gera o pdf de Assinatura
 async function gerarListaAssinatura(dadosNuvem, nomeSala) {
     try {
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
+            return;
+        }
+
         // Faz a requisição para o backend para gerar o PDF
-        const response = await fetchComToken('http://localhost:3000/leituraPDF', { // Alterado para usar fetchComToken
+        const response = await fetch('http://localhost:3000/leituraPDF', {
             method: 'POST',
             body: JSON.stringify({ dadosNuvem, nomeSala }), // Envia os dados dos alunos e o nome da sala
             headers: {
+                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
                 'Content-Type': 'application/json', // Define que estamos enviando JSON
-                'Accept': 'application/pdf' // Espera um PDF de resposta
+                'Accept': 'application/pdf', // Espera um PDF de resposta
             }
         });
 
         // Verifica se a resposta foi bem-sucedida
         if (!response.ok) {
-            throw new Error('Erro ao comunicar com o servidor para gerar o PDF');
-            mostrarPopup("Erro ao buscar PDFs", 'error');
-        } 
+            throw new Error(`Erro ao comunicar com o servidor: ${response.statusText}`);
+        }
 
         // Converte a resposta em um Blob e cria um link para download
         const blob = await response.blob();
@@ -568,17 +638,28 @@ async function gerarListaAssinatura(dadosNuvem, nomeSala) {
 
     } catch (error) {
         console.error('Erro ao gerar o PDF:', error);
+        mostrarPopup("Erro ao gerar o PDF", 'error');
     }
 }
 
 // Requisição Gerar o pdf Mapa de Sala
 async function gerarMapaDeSala(alunos, nomeSala) {
     try {
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
+            return;
+        }
+
         // Envia uma requisição POST para gerar o PDF e receber o arquivo
-        const response = await fetchComToken('http://localhost:3000/gerarMapaDeSala', { // Alterado para usar fetchComToken
+        const response = await fetch('http://localhost:3000/gerarMapaDeSala', {
             method: 'POST',
             body: JSON.stringify({ alunos, nomeSala }),
             headers: {
+                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
                 'Content-Type': 'application/json',
                 'Accept': 'application/pdf' // Informa que esperamos um PDF como resposta
             }
@@ -586,7 +667,7 @@ async function gerarMapaDeSala(alunos, nomeSala) {
 
         // Verifica se a resposta é bem-sucedida
         if (!response.ok) {
-            throw new Error('Erro ao gerar o PDF');
+            throw new Error(`Erro ao gerar o PDF: ${response.statusText}`);
         }
 
         // Converte a resposta em Blob para o download do PDF
@@ -601,26 +682,40 @@ async function gerarMapaDeSala(alunos, nomeSala) {
         window.URL.revokeObjectURL(url); // Libera o objeto URL
 
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao gerar o PDF:', error);
+        mostrarPopup("Erro ao gerar o PDF", 'error');
     }
 }
 
 // Requisição Gerar Lista de Localização
 async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
     try {
-        const response = await fetchComToken('http://localhost:3000/gerarLocalizacaoDeAlunos', { // Alterado para usar fetchComToken
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
+            return;
+        }
+
+        // Faz a requisição para o backend
+        const response = await fetch('http://localhost:3000/gerarLocalizacaoDeAlunos', {
             method: 'POST',
             body: JSON.stringify({ arrayDeAlunos: dadosNuvem, nomeSala }),
             headers: {
+                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
                 'Content-Type': 'application/json',
                 'Accept': 'application/pdf'
             }
         });
 
+        // Verifica se a resposta é bem-sucedida
         if (!response.ok) {
-            throw new Error('Erro ao gerar o mapa de sala');
+            throw new Error(`Erro ao gerar o mapa de sala: ${response.statusText}`);
         }
 
+        // Converte a resposta em Blob para o download do PDF
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -629,56 +724,45 @@ async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
         document.body.appendChild(a);
         a.click();
         a.remove();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(url); // Libera o objeto URL
+
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao gerar o mapa de sala:', error);
+        mostrarPopup("Erro ao gerar o mapa de sala", 'error');
     }
 }
 
 //Função deletar alunos
 async function deletarAlunos() {
     try {
-        const response = await fetchComToken('http://localhost:3000/alunos', { // Alterado para usar fetchComToken
-            method: 'DELETE'
-        });
-        const salas = await response.text();
-        return console.log(salas);
-    } catch (error) {
-        console.log(`Erro ao buscar os alunos: ${error}`);
-    }
-}
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
 
-//  Autenticação do token
-async function fetchComToken(url, options = {}) {
-    // Obtém o token do localStorage
-    const token = localStorage.getItem('token');
-
-    // Verifica se o token existe
-    if (!token) {
-        console.log('Usuário não autenticado!');
-        return; // Retorna ou lida com o erro de alguma forma
-    }
-
-    // Adiciona o cabeçalho Authorization com o token em todas as requisições
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...options.headers, // Adiciona os cabeçalhos extras que foram passados
-    };
-
-    // Realiza a requisição com os cabeçalhos configurados
-    try {
-        const response = await fetch(url, { ...options, headers });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.log('Erro:', data.error || 'Erro na requisição.');
+        if (!token) {
+            console.log("Token não encontrado no local storage");
+            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
             return;
         }
 
-        return data; // Retorna a resposta da requisição
+        // Faz a requisição para deletar os alunos
+        const response = await fetch('http://localhost:3000/alunos', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho
+            }
+        });
+
+        // Verifica se a resposta é bem-sucedida
+        if (!response.ok) {
+            throw new Error(`Erro ao deletar os alunos: ${response.statusText}`);
+        }
+
+        const mensagem = await response.text();
+        console.log(mensagem);
+        mostrarPopup("Alunos deletados com sucesso.", 'success');
+
     } catch (error) {
-        console.error('Erro ao fazer a requisição:', error);
+        console.log(`Erro ao deletar os alunos: ${error}`);
+        mostrarPopup("Erro ao deletar os alunos", 'error');
     }
 }

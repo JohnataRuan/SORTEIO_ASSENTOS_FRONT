@@ -40,40 +40,59 @@ bntArquivosImportados.addEventListener('click', function () {
         elementoBarraInformativa.style.display = 'none';
     }
 });
-//Função para fazer o Get apenas das salas e series
+
+
+
+// Requisição para fazer o Get apenas das salas e séries com verificação de token
 async function fetchSalas() {
     try {
-        // Chama a função fetchComToken, que já vai adicionar o token ao cabeçalho
-        const salas = await fetchComToken('http://localhost:3000/salas', {
-            method: 'GET', // Método GET para obter os dados das salas
-        });
+        // Obtém o token do local storage
+        const token = localStorage.getItem('token');
 
-        if (!salas) {
-            console.log('Não foi possível obter as salas!');
+        if (!token) {
+            console.log("Token não encontrado no local storage");
             return;
         }
 
-        // Ordena as salas antes de processá-las
+        // Faz a requisição ao backend com o token no cabeçalho
+        const response = await fetch('http://localhost:3000/salas', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            console.log(`Erro na requisição: ${response.statusText}`);
+            return;
+        }
+
+        const salas = await response.json();
+
+        if (salas.length === 0) {
+            exibirMensagemBancoVazio();
+            return;
+        }
+
         const salasOrdenadas = salas.sort((a, b) => {
-            // Primeiro compara a série (como número) e depois a turma (alfabética)
             return a.serie - b.serie || a.turma.localeCompare(b.turma);
         });
 
-        salasOrdenadas.map((sala) => {
-            if (sala.ensino === 'medio') {
-                // Verifica se a sala do Ensino Médio já foi exibida
-                if (!salasEnsinoMedio.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
-                    adicionarSalasnoHtmlMedio(sala);
-                    salasEnsinoMedio.push(sala); // Adiciona ao array de controle
-                }
-            } else {
-                // Verifica se a sala do Ensino Fundamental já foi exibida
-                if (!salasEnsinoFundamental.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
-                    adicionarSalasnoHtmlFundamental(sala); // Função correta para ensino fundamental
-                    salasEnsinoFundamental.push(sala); // Adiciona ao array de controle
-                }
+        salasOrdenadas.forEach((sala) => {
+            if (sala.ensino === 'medio' && !salasEnsinoMedio.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
+                adicionarSalasnoHtmlMedio(sala);
+                salasEnsinoMedio.push(sala);
+            } else if (sala.ensino === 'fundamental' && !salasEnsinoFundamental.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
+                adicionarSalasnoHtmlFundamental(sala);
+                salasEnsinoFundamental.push(sala);
             }
         });
+
+        // Adiciona as etiquetas conforme as turmas importadas
+        adicionarEtiquetasEnsino();
+
     } catch (error) {
         console.log(`Erro ao buscar as salas: ${error}`);
     }
@@ -97,37 +116,3 @@ document.getElementById("Download_Arquivos").addEventListener("click", function 
     window.location.href = "../download/download.html";
     });
 
-//  Autenticação do token
-async function fetchComToken(url, options = {}) {
-        // Obtém o token do localStorage
-        const token = localStorage.getItem('token');
-    
-        // Verifica se o token existe
-        if (!token) {
-            console.log('Usuário não autenticado!');
-            return; // Retorna ou lida com o erro de alguma forma
-        }
-    
-        // Adiciona o cabeçalho Authorization com o token em todas as requisições
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            ...options.headers, // Adiciona os cabeçalhos extras que foram passados
-        };
-    
-        // Realiza a requisição com os cabeçalhos configurados
-        try {
-            const response = await fetch(url, { ...options, headers });
-    
-            const data = await response.json();
-    
-            if (!response.ok) {
-                console.log('Erro:', data.error || 'Erro na requisição.');
-                return;
-            }
-    
-            return data; // Retorna a resposta da requisição
-        } catch (error) {
-            console.error('Erro ao fazer a requisição:', error);
-        }
-    }
