@@ -130,8 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //Conexões com o banco de dados
 document.addEventListener('DOMContentLoaded', function() {
-
-
     const uploadFile = async (event) => {
         event.preventDefault(); 
 
@@ -145,8 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Nenhum arquivo selecionado.');
             mostrarPopup("Nenhum arquivo foi selecionado", 'error');
             return false;
-    
-
         }
 
         formData.append('file', fileInput.files[0]);
@@ -155,26 +151,30 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('turma', turmaSelect.value);
 
         try {
-            const response = await fetch('http://localhost:3000/upload', {
+            // Chama a função fetchComToken para enviar o arquivo e os dados com o token
+            const response = await fetchComToken('http://localhost:3000/upload', {
                 method: 'POST',
                 body: formData
             });
 
-            if (response.ok) {
+            if (response) { // Se a resposta for bem-sucedida
                 console.log('Arquivo enviado com sucesso!');
                 mostrarPopup("Arquivo enviado com sucesso!", 'success');
-                return false;
-        
             } else {
-                mostrarErro('Erro ao enviar arquivo', response.statusText);
+                mostrarErro('Erro ao enviar arquivo');
                 mostrarPopup("Erro ao enviar arquivo", 'error');
             }
         } catch (error) {
             mostrarErro('Erro ao fazer upload', error);
             mostrarPopup("Erro ao enviar arquivo", 'error');
-            }
-
+        }
     };
+
+    // Adiciona o evento ao botão de envio
+    document.getElementById('uploadButton').addEventListener('click', uploadFile);
+});
+
+    
     // Função para exibir o pop-up
 function mostrarPopup(mensagem, tipo) {
     const popup = document.getElementById('popup');
@@ -200,4 +200,40 @@ function fecharPopup() {
 }
     // Associa a função de upload ao botão "Salvar"
     document.getElementById('salvar').addEventListener('click', uploadFile);
-});
+
+
+
+//  Autenticação do token
+async function fetchComToken(url, options = {}) {
+    // Obtém o token do localStorage
+    const token = localStorage.getItem('token');
+
+    // Verifica se o token existe
+    if (!token) {
+        console.log('Usuário não autenticado!');
+        return; // Retorna ou lida com o erro de alguma forma
+    }
+
+    // Adiciona o cabeçalho Authorization com o token em todas as requisições
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers, // Adiciona os cabeçalhos extras que foram passados
+    };
+
+    // Realiza a requisição com os cabeçalhos configurados
+    try {
+        const response = await fetch(url, { ...options, headers });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log('Erro:', data.error || 'Erro na requisição.');
+            return;
+        }
+
+        return data; // Retorna a resposta da requisição
+    } catch (error) {
+        console.error('Erro ao fazer a requisição:', error);
+    }
+}

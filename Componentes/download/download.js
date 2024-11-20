@@ -483,10 +483,10 @@ function organizaAlunos(array, serieAluno, turmaAluno) {
 
                     // Parte Responsável pelas Requisições
 
-//Requisição para fazer o Get apenas das salas e series
+// Requisição para fazer o Get apenas das salas e séries
 async function fetchSalas() {
     try {
-        const response = await fetch('http://localhost:3000/salas');
+        const response = await fetchComToken('http://localhost:3000/salas'); // Alterado para usar fetchComToken
         const salas = await response.json();
 
         if (salas.length === 0) {
@@ -520,7 +520,7 @@ async function fetchSalas() {
 // Requisição para sortear os alunos
 async function sortearAlunos(salasSelecionadas) {
     try {
-        const response = await fetch('http://localhost:3000/sortearAlunos', {
+        const response = await fetchComToken('http://localhost:3000/sortearAlunos', { // Alterado para usar fetchComToken
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -540,7 +540,7 @@ async function sortearAlunos(salasSelecionadas) {
 async function gerarListaAssinatura(dadosNuvem, nomeSala) {
     try {
         // Faz a requisição para o backend para gerar o PDF
-        const response = await fetch('http://localhost:3000/leituraPDF', {
+        const response = await fetchComToken('http://localhost:3000/leituraPDF', { // Alterado para usar fetchComToken
             method: 'POST',
             body: JSON.stringify({ dadosNuvem, nomeSala }), // Envia os dados dos alunos e o nome da sala
             headers: {
@@ -575,7 +575,7 @@ async function gerarListaAssinatura(dadosNuvem, nomeSala) {
 async function gerarMapaDeSala(alunos, nomeSala) {
     try {
         // Envia uma requisição POST para gerar o PDF e receber o arquivo
-        const response = await fetch('http://localhost:3000/gerarMapaDeSala', {
+        const response = await fetchComToken('http://localhost:3000/gerarMapaDeSala', { // Alterado para usar fetchComToken
             method: 'POST',
             body: JSON.stringify({ alunos, nomeSala }),
             headers: {
@@ -608,7 +608,7 @@ async function gerarMapaDeSala(alunos, nomeSala) {
 // Requisição Gerar Lista de Localização
 async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
     try {
-        const response = await fetch('http://localhost:3000/gerarLocalizacaoDeAlunos', {
+        const response = await fetchComToken('http://localhost:3000/gerarLocalizacaoDeAlunos', { // Alterado para usar fetchComToken
             method: 'POST',
             body: JSON.stringify({ arrayDeAlunos: dadosNuvem, nomeSala }),
             headers: {
@@ -637,13 +637,48 @@ async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
 
 //Função deletar alunos
 async function deletarAlunos() {
-        try {
-            const response = await fetch('http://localhost:3000/alunos',{
-                method: 'DELETE'
-            });
-            const salas = await response.text();
-            return console.log(salas);
-        } catch (error) {
-            console.log(`Erro ao buscar os alunos: ${error}`);
+    try {
+        const response = await fetchComToken('http://localhost:3000/alunos', { // Alterado para usar fetchComToken
+            method: 'DELETE'
+        });
+        const salas = await response.text();
+        return console.log(salas);
+    } catch (error) {
+        console.log(`Erro ao buscar os alunos: ${error}`);
+    }
+}
+
+//  Autenticação do token
+async function fetchComToken(url, options = {}) {
+    // Obtém o token do localStorage
+    const token = localStorage.getItem('token');
+
+    // Verifica se o token existe
+    if (!token) {
+        console.log('Usuário não autenticado!');
+        return; // Retorna ou lida com o erro de alguma forma
+    }
+
+    // Adiciona o cabeçalho Authorization com o token em todas as requisições
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers, // Adiciona os cabeçalhos extras que foram passados
+    };
+
+    // Realiza a requisição com os cabeçalhos configurados
+    try {
+        const response = await fetch(url, { ...options, headers });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log('Erro:', data.error || 'Erro na requisição.');
+            return;
         }
+
+        return data; // Retorna a resposta da requisição
+    } catch (error) {
+        console.error('Erro ao fazer a requisição:', error);
+    }
 }

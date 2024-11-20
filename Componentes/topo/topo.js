@@ -43,8 +43,15 @@ bntArquivosImportados.addEventListener('click', function () {
 //Função para fazer o Get apenas das salas e series
 async function fetchSalas() {
     try {
-        const response = await fetch('http://localhost:3000/salas');
-        const salas = await response.json();
+        // Chama a função fetchComToken, que já vai adicionar o token ao cabeçalho
+        const salas = await fetchComToken('http://localhost:3000/salas', {
+            method: 'GET', // Método GET para obter os dados das salas
+        });
+
+        if (!salas) {
+            console.log('Não foi possível obter as salas!');
+            return;
+        }
 
         // Ordena as salas antes de processá-las
         const salasOrdenadas = salas.sort((a, b) => {
@@ -71,6 +78,7 @@ async function fetchSalas() {
         console.log(`Erro ao buscar as salas: ${error}`);
     }
 }
+
 //Ao clickar do botão a função é acionada
 bntArquivosImportados.addEventListener('click', fetchSalas);
 
@@ -89,4 +97,37 @@ document.getElementById("Download_Arquivos").addEventListener("click", function 
     window.location.href = "../download/download.html";
     });
 
- 
+//  Autenticação do token
+async function fetchComToken(url, options = {}) {
+        // Obtém o token do localStorage
+        const token = localStorage.getItem('token');
+    
+        // Verifica se o token existe
+        if (!token) {
+            console.log('Usuário não autenticado!');
+            return; // Retorna ou lida com o erro de alguma forma
+        }
+    
+        // Adiciona o cabeçalho Authorization com o token em todas as requisições
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            ...options.headers, // Adiciona os cabeçalhos extras que foram passados
+        };
+    
+        // Realiza a requisição com os cabeçalhos configurados
+        try {
+            const response = await fetch(url, { ...options, headers });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                console.log('Erro:', data.error || 'Erro na requisição.');
+                return;
+            }
+    
+            return data; // Retorna a resposta da requisição
+        } catch (error) {
+            console.error('Erro ao fazer a requisição:', error);
+        }
+    }
