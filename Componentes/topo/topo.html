@@ -1,0 +1,41 @@
+<link rel="stylesheet" type="text/css" media="screen" href="topo.css" />
+<header id ="header">
+    <div class="conteiner">
+        <div class="flex">
+        <img src = "/Assets/Imagens/logo.png" alt="logo" class="logoLourdinas" >
+         <!-- Links de direcionamento para as outras páginas -->
+    <div class="Mapa-site">
+        <nav>
+            <ul>
+           <li> <span class ='Inicio' id='Inicio'>INÍCIO</span></li>
+           <li> <span class ='Importar_Arquivos'id='Importar_Arquivos'>IMPORTAR ARQUIVOS</span></li>
+           <li> <span class ='Download_Arquivos' id='Download_Arquivos'>DOWNLOAD ARQUIVOS</span></li>
+        </nav>
+    
+    </div>
+    <!-- Barra Informativa onde possuí os dados das salas importadas -->
+    <div class="barraInformativa" id="barraInformativa">
+        <div class="Ensino_M" id="Ensino_M">
+            <h2 class="Ensino_M_Titulo">Ensino Médio :</h2>
+            <h4 class="nenhumaSala01" id="nenhumaSala1">Nenhuma sala foi importada</h4>
+        </div>
+        <div class="Ensino_F" id="Ensino_F">
+            <h2 class="Ensino_F_Titulo">Ensino Fundamental :</h2>
+            <h4 class="nenhumaSala02" id="nenhumaSala2">Nenhuma sala foi importada</h4>
+        </div>
+    </div>
+    <!-- Botão que faz aparecer a barra informativa utilizando uma função no JS -->
+    <div  class = "arquivosImportados" id ='arquivosImportados'>
+        <span class="arqImport">Arquivos Importados</span>   
+        <img src = "/Assets/Icones/bxs--down-arrow.svg" alt="IconeArquivosImportados" class="iconeArquivoImportados">
+    </div>
+</div><!--flex-->
+<!-- Mensagem de erro-->
+<div id="popup" class="popup">
+    <span id="popupIcon" class="popup-icon"></span>
+    <span id="popupMessage" class="popup-message"></span>
+    <span id="popupClose" class="popup-close" onclick="fecharPopup()">&times;</span>
+    
+</div><!--conteiner-->
+</header>
+<script src="topo.js" type="module"></script>
