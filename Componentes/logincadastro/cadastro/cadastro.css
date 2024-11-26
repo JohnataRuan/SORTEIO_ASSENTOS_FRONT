@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -7,11 +6,11 @@
 }
 
 body {
-    background-image: url('../../../Assets/Imagens/sl_043021_42650_27.jpg'); /* Substitua pelo caminho da sua imagem */
-    background-size: cover; /* Faz com que a imagem cubra toda a tela */
-    background-repeat: no-repeat; /* Evita repetição da imagem */
-    background-position: center; /* Centraliza a imagem */
-    margin: 0; /* Remove margens padrão do navegador */
+    background-image: url('../../../Assets/Imagens/sl_043021_42650_27.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -24,56 +23,42 @@ body {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     display: flex;
-    max-width: 900px;
+    max-width: 750px;
     width: 100%;
     overflow: hidden;
-
+    flex-wrap: wrap; /* Permite que os itens do container sejam responsivos */
 }
 
 .login-info {
-    color: white;
-    width: 45%;
+    width: 50%; 
     display: flex;
-    flex-direction: column;
     justify-content: center;
-}
-
-.login-info h2 {
-    font-family: "Inter";
-    font-size: 24px;
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
-
-.login-info img {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
+    align-items: center;
 }
 
 .login-form {
-    padding: 40px;
-    width: 55%;
-    text-align: center;
+    padding: 10px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 5px;
+    min-height: auto;
 }
 
 .logo {
-    align-self: center;
-    margin-bottom: 0px;
-    margin-top: -10%;
     width: 140px;
-}
-
-.logo img {
-    width: 100px;
-    height: auto;
+    margin-top: -20px;
 }
 
 h1 {
     font-family: "Inter";
-    text-align: center;
-    margin-bottom: 5px;
     color: #333;
+}
+
+form {
+    width: 90%;
 }
 
 .form-group {
@@ -81,21 +66,17 @@ h1 {
 }
 
 label {
-    text-align: start;
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: bold;
+    font-family: "Inter";
+    font-weight: 600;
+    font-size: 15px;
 }
 
 input {
     font-family: "Inter";
     width: 100%;
     padding: 12px;
-    border: 2px solid #f7f7f7;
     font-size: 14px;
-    transition: border-color 0.3s;
-    border: 1px solid transparent; 
+    border: 1px solid #ccc;
     box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
 }
 
@@ -108,19 +89,15 @@ input {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    margin-bottom: 10px;
-    margin-top: 20px;
-}
-
-.submit-btn:hover {
-    background: #0056b3;
+    margin-top: 15px;
 }
 
 .register-link {
     font-family: "Inter";
-    text-align: center;
     color: #666;
     font-weight: 400;
+    margin-top: 10px;
+    text-align: center;
 }
 
 .register-link a {
@@ -128,7 +105,7 @@ input {
     font-weight: 400;
     color: #007bff;
     text-decoration: none;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -145,15 +122,23 @@ input {
         padding: 20px;
     }
 }
+
 .error-message {
     color: red;
     font-size: 12px;
     margin-top: 5px;
-    display: none; /* Oculto por padrão */
+    display: block;
 }
 
+input {
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+.invalid {
+    border: 1px solid red;  /* Borda vermelha */
+}
 
-/* Estilos para o pop-up */
 .popup {
     position: fixed;
     top: 20px;

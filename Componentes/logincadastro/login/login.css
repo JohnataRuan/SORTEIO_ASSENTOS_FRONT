@@ -24,104 +24,78 @@ body {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     display: flex;
-    max-width: 900px;
+    max-width: 750px;
     width: 100%;
     overflow: hidden;
-
+    height: 97%; /* Reduzido em 3% */
 }
 
 .login-info {
-    color: white;
-    width: 45%;
+    width: 50%; /* Aumentado para 50% para alinhar com o login-form */
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.login-info h2 {
-    font-family: "Inter";
-    font-size: 24px;
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
-
-.login-info img {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-}
-
 .login-form {
-    padding: 40px;
-    width: 55%;
-    text-align: center;
+    padding: 10px; /* Espaçamento ajustado */
+    width: 50%; /* Mantido */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente os elementos */
+    align-items: center; /* Centraliza horizontalmente os elementos */
+    gap: 5px; /* Espaçamento consistente entre os elementos */
 }
 
 .logo {
-    align-self: center;
-    margin-bottom: 0px;
-    margin-top: -10%;
-    width: 140px;
-}
-.logo img {
-    width: 100px;
-    height: auto;
+    width: 140px; /* Tamanho da imagem mantido */
+    margin-top: -20px;
 }
 
 h1 {
     font-family: "Inter";
-    text-align: center;
-    margin-bottom: 70px;
     color: #333;
 }
 
+form{
+    width: 90%;
+}
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Menor espaçamento entre os campos */
 }
-
-label {
-    text-align: start;
-    display: block;
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: bold;
+label{
+    font-family: "Inter";
+    font-weight: 600;
+    font-size: 15px;
 }
-
 input {
     font-family: "Inter";
     width: 100%;
-    padding: 12px;
-    border: 2px solid #f7f7f7;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    border: 1px solid transparent; 
-    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
+    padding: 12px; /* Mantido */
+    font-size: 14px; /* Mantido */
+    border: 1px solid #ccc; /* Mantido */
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2); /* Mantido */
 }
 
 .submit-btn {
     width: 100%;
-    padding: 12px;
-    background: #007bff;
+    padding: 12px; /* Mantido */
+    background: #007bff; /* Mantido */
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 16px; /* Mantido */
     cursor: pointer;
-    margin-bottom: 15px;
-    margin-top: 30px;
-}
-
-.submit-btn:hover {
-    background: #0056b3;
+    margin-top: 35px; /* Margem ajustada */
 }
 
 .register-link {
     font-family: "Inter";
-    text-align: center;
     color: #666;
     font-weight: 400;
+    margin-top: 10px; /* Mantido */
+    text-align: center;
 }
-
 .register-link a {
     font-family: "Inter";
     font-weight: 400;

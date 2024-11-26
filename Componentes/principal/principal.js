@@ -1,3 +1,6 @@
+
+                            // Importação do Cabeçalho e Footer do site
+
 //Função para adicionar o topo do site
 async function importarCabecalho() {
     try {
@@ -20,9 +23,6 @@ async function importarCabecalho() {
     }
 }
 
-// Chame a função para importar o cabeçalho quando a página carregar
-window.addEventListener('DOMContentLoaded', importarCabecalho);
-
 // Função para adicionar o rodapé do site
 async function importarRodape() {
     try {
@@ -44,6 +44,12 @@ async function importarRodape() {
 
 // Chame a função para importar o rodapé quando a página carregar
 window.addEventListener('DOMContentLoaded', importarRodape);
+// Chame a função para importar o cabeçalho quando a página carregar
+window.addEventListener('DOMContentLoaded', importarCabecalho);
+
+
+                            // Botões de direcionamento da página
+
 // Redireciona o BotaoImportarArquivos --> Página de Importar Arquivos
 document.getElementById("BotaoImportarArquivos").addEventListener("click", function () {
     window.location.href = "../importar/importar.html";
@@ -53,6 +59,9 @@ document.getElementById("BotaoImportarArquivos").addEventListener("click", funct
 document.getElementById("BotaoDownload").addEventListener("click", function () {
     window.location.href = "../download/download.html";
 });
+
+
+                        // Mensagens de Error
 
 //Funções da mensagem de Error
 function mostrarErro(titulo, mensagem) {
