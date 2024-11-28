@@ -3,6 +3,8 @@ document.getElementById("cadastrar").addEventListener("click", function () {
     window.location.href = "../cadastro/cadastro.html";
 });
 
+
+// Ao clickar em entrar chama a função que envia dados para o backEnd
 document.getElementById('entrar').addEventListener('click', enviarDados);
 
 
@@ -93,6 +95,8 @@ function validarSenha() {
 monitorarCampo('email', validarEmail);
 monitorarCampo('senha', validarSenha);
 
+
+// Requisição para o backEnd para validar o usuário logado
 async function enviarDados() {
     // Realiza validações antes de enviar
     const emailValido = validarEmail();

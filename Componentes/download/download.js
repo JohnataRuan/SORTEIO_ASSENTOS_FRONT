@@ -275,7 +275,7 @@ function exibirMensagemBancoVazio() {
     textoNaoImportado.className = 'textoNaoImportado';
   
     textoNaoImportado.innerHTML = `
-        <h3>Nenhuma Sala foi Importada.</h3>
+        <h2>Nenhuma Sala foi Importada.</h2>
         <br>
         <br>
         <p class="texto-naoImportado">

@@ -3,11 +3,23 @@ document.getElementById("paginaLogin").addEventListener("click", function () {
     window.location.href = "../login/login.html";
 });
 
+// Redireciona para a página de login com a validação do formulário no clique do botão
+document.getElementById('formCadastro').addEventListener('submit', function (event) {
+    event.preventDefault();  // Impede o envio do formulário até a validação ser feita
+
+    // Verifica se o formulário é válido
+    if (validarFormulario()) {
+        cadastrarUsuario();  // Chama a função para realizar o cadastro
+    }
+});
+
 // Adiciona os listeners de validação para os campos
 monitorarCampo('nome', validarNomeSobrenome);
 monitorarCampo('email', validarEmail);
 monitorarCampo('senha', validarSenha);
 monitorarCampo('senhaRepetida', validarRepetirSenha);
+
+                // Parte que valida os campos do cadastro
 
 // Função para monitorar campos e validar ao perder o foco
 function monitorarCampo(campoId, funcaoValidacao) {
@@ -88,15 +100,6 @@ function validarRepetirSenha() {
     return true;
 }
 
-// Redireciona para a página de cadastro com a validação do formulário no clique do botão
-document.getElementById('formCadastro').addEventListener('submit', function (event) {
-    event.preventDefault();  // Impede o envio do formulário até a validação ser feita
-
-    // Verifica se o formulário é válido
-    if (validarFormulario()) {
-        cadastrarUsuario();  // Chama a função para realizar o cadastro
-    }
-});
 
 // Função de validação do formulário
 function validarFormulario() {
