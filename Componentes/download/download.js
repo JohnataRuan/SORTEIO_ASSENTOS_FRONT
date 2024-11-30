@@ -513,7 +513,7 @@ async function fetchSalas() {
             return;
         }
 
-        const response = await fetch('http://localhost:3000/salas', {
+        const response = await fetch('http://localhost:3000/student/salas', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -578,7 +578,7 @@ async function sortearAlunos(salasSelecionadas) {
         }
 
         // Faz a requisição ao backend com o token no cabeçalho
-        const response = await fetch('http://localhost:3000/sortearAlunos', {
+        const response = await fetch('http://localhost:3000/sort/sortearAlunos', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -628,7 +628,7 @@ async function gerarListaAssinatura(dadosNuvem, nomeSala) {
         }
 
         // Faz a requisição para o backend para gerar o PDF
-        const response = await fetch('http://localhost:3000/leituraPDF', {
+        const response = await fetch('http://localhost:3000/pdf/leituraPDF', {
             method: 'POST',
             body: JSON.stringify({ dadosNuvem, nomeSala }), // Envia os dados dos alunos e o nome da sala
             headers: {
@@ -687,7 +687,7 @@ async function gerarMapaDeSala(alunos, nomeSala) {
         }
 
         // Envia uma requisição POST para gerar o PDF e receber o arquivo
-        const response = await fetch('http://localhost:3000/gerarMapaDeSala', {
+        const response = await fetch('http://localhost:3000/pdf/gerarMapaDeSala', {
             method: 'POST',
             body: JSON.stringify({ alunos, nomeSala }),
             headers: {
@@ -747,7 +747,7 @@ async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
         }
 
         // Faz a requisição para o backend
-        const response = await fetch('http://localhost:3000/gerarLocalizacaoDeAlunos', {
+        const response = await fetch('http://localhost:3000/pdf/gerarLocalizacaoDeAlunos', {
             method: 'POST',
             body: JSON.stringify({ arrayDeAlunos: dadosNuvem, nomeSala }),
             headers: {
@@ -812,7 +812,7 @@ async function deletarAlunos() {
         mostrarPopup("Deletando alunos...", 'loading');
 
         // Faz a requisição para deletar os alunos
-        const response = await fetch('http://localhost:3000/deletaralunos', {
+        const response = await fetch('http://localhost:3000/student/deletaralunos', {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho

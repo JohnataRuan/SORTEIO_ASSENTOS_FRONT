@@ -85,7 +85,7 @@ async function fetchSalas() {
         }
 
         // Faz a requisição ao backend com o token no cabeçalho
-        const response = await fetch('http://localhost:3000/salas', {
+        const response = await fetch('http://localhost:3000/student/salas', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

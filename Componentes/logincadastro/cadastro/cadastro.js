@@ -149,7 +149,7 @@ async function cadastrarUsuario() {
 
     try {
         // Envia a requisição POST para o backend
-        const response = await fetch('http://localhost:3000/cadastrar', {
+        const response = await fetch('http://localhost:3000/auth/cadastrar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
