@@ -1,4 +1,27 @@
-                // Parte Responsável pela importação dos outros html
+import {fetchSalas,sortearAlunos,gerarListaAssinatura,gerarMapaDeSala,gerarLocalizacaoDeAlunos,deletarAlunos} from '../../utils/routes/apiRequestDownload.js';
+// Parte Responsável pela importação dos outros html
+async function carregarPopup() {
+    try {
+        // Importar o HTML do pop-up
+        const response = await fetch('../popup/popup.css');
+        const popupHTML = await response.text();
+        document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+        // Adicionar o CSS dinamicamente
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = '../popup/popup.css';
+        document.head.appendChild(cssLink);
+
+        // Importar o JavaScript do pop-up
+        await import('../popup/popup.js');
+    } catch (error) {
+        console.error('Erro ao carregar o pop-up:', error);
+    }
+}
+// Carregar o pop-up assim que a página for carregada
+carregarPopup();
+
 
 //Função para importar cabeçalho
 async function importarCabecalho() {
@@ -58,36 +81,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-  // Função para exibir o pop-up
-  function mostrarPopup(mensagem, tipo) {
-    const popup = document.getElementById('popup');
-    const popupMessage = document.getElementById('popupMessage');
-    const popupIcon = document.getElementById('popupIcon');
-
-    popupMessage.textContent = mensagem;
-    if (tipo === 'success') {
-        popup.className = 'popup popup-success show';
-        popupIcon.textContent = '✔️';
-    } else if (tipo === 'error') {
-        popup.className = 'popup popup-error show';
-        popupIcon.textContent = '❌';
-    }
-
-    setTimeout(fecharPopup, 4000);
-}
-
-// Função para fechar o pop-up
-function fecharPopup() {
-    const popup = document.getElementById('popup');
-    popup.classList.remove('show');
-}
-
                 // Parte Responsável pela exibição dos CheckBoxs no HTML
 
 const salasEnsinoMedio = [];
 const salasEnsinoFundamental = [];
-document.addEventListener('DOMContentLoaded', fetchSalas());
 
+// Chama a função fetchSalas normalmente quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    fetchSalas(adicionarSalasnoHtmlMedio, adicionarSalasnoHtmlFundamental, salasEnsinoMedio, salasEnsinoFundamental, adicionarEtiquetasEnsino,exibirMensagemBancoVazio);
+});
     //Botão para aparecer a box de confirmação
 document.getElementById('limpar').addEventListener('click',function(event){
     event.preventDefault();
@@ -107,7 +109,7 @@ function boxConfimacaoNao(){
 }
 
     //Botão para apagar salas
-document.getElementById('bntSim').addEventListener('click',function(event){
+document.getElementById('bntSim').addEventListener('click',function(){
     deletarAlunos();
     location.reload();
 });
@@ -117,27 +119,6 @@ document.getElementById('bntNao').addEventListener('click',function(event){
     event.preventDefault();
     boxConfimacaoNao();
 });
-
-
-    //Funções da mensagem de Error
-function mostrarErro(titulo, mensagem) {
-    const tituloElemento = document.getElementById('tituloErro');
-    const mensagemElemento = document.getElementById('mensagemErro');
-    const erroElemento = document.getElementById('erro');
-
-    // Atualiza os elementos com os dados da mensagem
-    tituloElemento.textContent = titulo;
-    mensagemElemento.textContent = mensagem;
-
-    // Torna o elemento de erro visível
-    erroElemento.style.display = 'block';
-}
-
-    // Função para fechar a mensagem de erro
-function fecharErro() {
-    const erroElemento = document.getElementById('erro');
-    erroElemento.style.display = 'none';
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('iconeX').addEventListener('click', fecharErro);
@@ -275,7 +256,7 @@ function exibirMensagemBancoVazio() {
     textoNaoImportado.className = 'textoNaoImportado';
   
     textoNaoImportado.innerHTML = `
-        <h2>Nenhuma Sala foi Importada.</h2>
+        <h2 class ="tituloNaoImportado" >Nenhuma Sala foi Importada.</h2>
         <br>
         <br>
         <p class="texto-naoImportado">
@@ -288,6 +269,8 @@ function exibirMensagemBancoVazio() {
     // Adiciona o elemento ao container de download
     barraDownload.prepend(textoNaoImportado);
 }
+
+
 // Função para adicionar etiquetas de Ensino Médio e Fundamental acima dos checkboxes
 function adicionarEtiquetasEnsino() {
     const labelEnsinoMedio = document.getElementById('checkbox1');
@@ -502,340 +485,5 @@ function organizaAlunos(array, serieAluno, turmaAluno) {
     return resultado;
 }
 
-                    // Parte Responsável pelas Requisições
 
-               
-async function fetchSalas() {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            return;
-        }
 
-        const response = await fetch('http://localhost:3000/student/salas', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                console.log("Erro de autenticação: redirecionando para login.");
-                mostrarPopup("Erro de autenticação: token inválido ou expirado.", 'error');
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html';
-                }, 3000);
-                return;
-            }
-            console.log(`Erro na requisição: ${response.statusText}`);
-            return;
-        }
-
-        const salas = await response.json();
-
-        if (salas.length === 0) {
-            exibirMensagemBancoVazio();
-            return;
-        }
-
-        const salasOrdenadas = salas.sort((a, b) => {
-            return a.serie - b.serie || a.turma.localeCompare(b.turma);
-        });
-
-        salasOrdenadas.forEach((sala) => {
-            if (sala.ensino === 'medio' && !salasEnsinoMedio.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
-                adicionarSalasnoHtmlMedio(sala);
-                salasEnsinoMedio.push(sala);
-            } else if (sala.ensino === 'fundamental' && !salasEnsinoFundamental.some(s => s.serie === sala.serie && s.turma === sala.turma)) {
-                adicionarSalasnoHtmlFundamental(sala);
-                salasEnsinoFundamental.push(sala);
-            }
-        });
-
-        adicionarEtiquetasEnsino();
-    } catch (error) {
-        console.log(`Erro ao buscar as salas: ${error}`);
-    }
-}
-
-// Requisição para sortear os alunos com verificação de token
-
-async function sortearAlunos(salasSelecionadas) {
-    try {
-        // Obtém o token do local storage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
-            setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-            }, 3000);
-            return;
-        }
-
-        // Faz a requisição ao backend com o token no cabeçalho
-        const response = await fetch('http://localhost:3000/sort/sortearAlunos', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ salasSelecionadas }),
-        });
-
-        // Verifica se a resposta foi bem-sucedida
-        if (!response.ok) {
-            console.log(`Erro na requisição: ${response.statusText}`);
-            mostrarPopup("Erro ao realizar o sorteio", 'error');
-            if (response.status === 401) { // Caso o token seja inválido ou expirado
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-                }, 3000);
-            }
-            return;
-        }
-
-        const data = await response.json();
-        return data;
-
-    } catch (error) {
-        console.error('Erro ao buscar PDFs:', error);
-        mostrarPopup("Erro ao buscar PDFs", 'error');
-        setTimeout(() => {
-            window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-        }, 3000);
-    }
-}
-
-// Requisição Gera o pdf de Assinatura
-
-async function gerarListaAssinatura(dadosNuvem, nomeSala) {
-    try {
-        // Obtém o token do local storage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
-            setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-            }, 3000);
-            return;
-        }
-
-        // Faz a requisição para o backend para gerar o PDF
-        const response = await fetch('http://localhost:3000/pdf/leituraPDF', {
-            method: 'POST',
-            body: JSON.stringify({ dadosNuvem, nomeSala }), // Envia os dados dos alunos e o nome da sala
-            headers: {
-                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
-                'Content-Type': 'application/json', // Define que estamos enviando JSON
-                'Accept': 'application/pdf', // Espera um PDF de resposta
-            }
-        });
-
-        // Verifica se a resposta foi bem-sucedida
-        if (!response.ok) {
-            console.log(`Erro na requisição: ${response.statusText}`);
-            mostrarPopup("Erro ao gerar o PDF", 'error');
-
-            if (response.status === 401) { // Caso o token seja inválido ou expirado
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-                }, 3000);
-            }
-            return;
-        }
-
-        // Converte a resposta em um Blob e cria um link para download
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `lista_assinatura_${nomeSala}.pdf`; // Define o nome do arquivo de download
-        document.body.appendChild(a); // Adiciona o link ao DOM
-        a.click(); // Simula o clique para iniciar o download
-        a.remove(); // Remove o link do DOM após o clique
-        window.URL.revokeObjectURL(url); // Libera o objeto URL
-
-    } catch (error) {
-        console.error('Erro ao gerar o PDF:', error);
-        mostrarPopup("Erro ao gerar o PDF", 'error');
-        setTimeout(() => {
-            window.location.href = '../logincadastro/login/login.html'; // Caminho ajustado
-        }, 3000);
-    }
-}
-
-// Requisição Gerar o pdf Mapa de Sala
-async function gerarMapaDeSala(alunos, nomeSala) {
-    try {
-        // Obtém o token do local storage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
-            setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-            }, 3000);
-            return;
-        }
-
-        // Envia uma requisição POST para gerar o PDF e receber o arquivo
-        const response = await fetch('http://localhost:3000/pdf/gerarMapaDeSala', {
-            method: 'POST',
-            body: JSON.stringify({ alunos, nomeSala }),
-            headers: {
-                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
-                'Content-Type': 'application/json',
-                'Accept': 'application/pdf' // Informa que esperamos um PDF como resposta
-            }
-        });
-
-        // Verifica se a resposta é bem-sucedida
-        if (!response.ok) {
-            console.log(`Erro na requisição: ${response.statusText}`);
-            mostrarPopup("Erro ao gerar o PDF", 'error');
-
-            // Redireciona para login se o token for inválido ou expirado (erro 401)
-            if (response.status === 401) {
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-                }, 3000);
-            }
-            return;
-        }
-
-        // Converte a resposta em Blob para o download do PDF
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `MapaDeSala_${nomeSala}.pdf`; // Define o nome do arquivo para download
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url); // Libera o objeto URL
-
-    } catch (error) {
-        console.error('Erro ao gerar o PDF:', error);
-        mostrarPopup("Erro ao gerar o PDF", 'error');
-        setTimeout(() => {
-            window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-        }, 3000);
-    }
-}
-
-// Requisição Gerar Lista de Localização
-async function gerarLocalizacaoDeAlunos(dadosNuvem, nomeSala) {
-    try {
-        // Obtém o token do local storage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
-            setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-            }, 3000);
-            return;
-        }
-
-        // Faz a requisição para o backend
-        const response = await fetch('http://localhost:3000/pdf/gerarLocalizacaoDeAlunos', {
-            method: 'POST',
-            body: JSON.stringify({ arrayDeAlunos: dadosNuvem, nomeSala }),
-            headers: {
-                'Authorization': `Bearer ${token}`, // Inclui o token no cabeçalho
-                'Content-Type': 'application/json',
-                'Accept': 'application/pdf'
-            }
-        });
-
-        // Verifica se a resposta é bem-sucedida
-        if (!response.ok) {
-            console.error(`Erro ao gerar o mapa de sala: ${response.statusText}`);
-            mostrarPopup("Erro ao gerar o mapa de sala", 'error');
-
-            if (response.status === 401) {
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-                }, 3000);
-            }
-            return;
-        }
-
-        // Converte a resposta em Blob para o download do PDF
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-
-        // Define um nome dinâmico para o arquivo de download
-        const currentDate = new Date().toISOString().split('T')[0]; // Formato: AAAA-MM-DD
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `LocalizacaoDeAlunos_${nomeSala}_${currentDate}.pdf`; // Nome do arquivo
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url); // Libera o objeto URL
-
-    } catch (error) {
-        console.error('Erro ao gerar o mapa de sala:', error);
-        mostrarPopup("Erro ao gerar o mapa de sala", 'error');
-        setTimeout(() => {
-            window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-        }, 3000);
-    }
-}
-
-//Função deletar alunos
-async function deletarAlunos() {
-    try {
-        // Obtém o token do local storage
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            console.log("Token não encontrado no local storage");
-            mostrarPopup("Erro de autenticação: token não encontrado.", 'error');
-            setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-            }, 3000);
-            return;
-        }
-
-        // Exibe uma mensagem de carregamento
-        mostrarPopup("Deletando alunos...", 'loading');
-
-        // Faz a requisição para deletar os alunos
-        const response = await fetch('http://localhost:3000/student/deletaralunos', {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho
-            }
-        });
-
-        // Verifica se a resposta é bem-sucedida
-        if (!response.ok) {
-            if (response.status === 401) {
-                mostrarPopup("Erro de autenticação: sessão expirada.", 'error');
-                setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html'; // Ajuste o caminho conforme necessário
-                }, 3000);
-            }
-            throw new Error(`Erro ao deletar os alunos: ${response.statusText}`);
-        }
-
-        const mensagem = await response.text();
-        console.log(mensagem);
-        mostrarPopup("Alunos deletados com sucesso.", 'success');
-
-    } catch (error) {
-        console.error(`Erro ao deletar os alunos: ${error}`);
-        mostrarPopup("Erro ao deletar os alunos. Tente novamente mais tarde.", 'error');
-    }
-}

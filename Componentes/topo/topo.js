@@ -1,4 +1,25 @@
-                // Variáveis
+// Função para carregar o pop-up automaticamente
+async function carregarPopup() {
+    try {
+        // Importar o HTML do pop-up
+        const response = await fetch('../popup/popup.html');
+        const popupHTML = await response.text();
+        document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+        // Adicionar o CSS dinamicamente
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = '../popup/popup.css';
+        document.head.appendChild(cssLink);
+
+        // Importar o JavaScript do pop-up
+        await import('../popup/popup.js');
+    } catch (error) {
+        console.error('Erro ao carregar o pop-up:', error);
+    }
+}
+// Carregar o pop-up assim que a página for carregada
+carregarPopup();
 
 let bntArquivosImportados = document.getElementById('arquivosImportados');
 let elementoBarraInformativa = document.getElementById('barraInformativa');
@@ -79,7 +100,7 @@ async function fetchSalas() {
             console.log("Token não encontrado no local storage");
             mostrarPopup("Erro de autenticação: token inválido ou expirado.", 'error');
             setTimeout(() => {
-                window.location.href = '../logincadastro/login/login.html';
+                window.location.href = '../../Componentes/login/login.html';
             }, 3000);
             return;
         }
@@ -99,7 +120,7 @@ async function fetchSalas() {
                 console.log("Token inválido ou sessão expirada");
                 mostrarPopup("Erro de autenticação: token inválido ou expirado.", 'error');
                 setTimeout(() => {
-                    window.location.href = '../logincadastro/login/login.html';
+                    window.location.href = '../../Componentes/login/login.html';
                 }, 3000);
             }
             console.log(`Erro na requisição: ${response.statusText}`);
@@ -128,29 +149,3 @@ async function fetchSalas() {
 }
 
 
-
-
-    // Função para exibir o pop-up
-    function mostrarPopup(mensagem, tipo) {
-        console.log("Poupop chamado!")
-            const popup = document.getElementById('popup');
-            const popupMessage = document.getElementById('popupMessage');
-            const popupIcon = document.getElementById('popupIcon');
-        
-            popupMessage.textContent = mensagem;
-            if (tipo === 'success') {
-                popup.className = 'popup popup-success show';
-                popupIcon.textContent = '✔️';
-            } else if (tipo === 'error') {
-                popup.className = 'popup popup-error show';
-                popupIcon.textContent = '❌';
-            }
-        
-            setTimeout(fecharPopup, 3000);
-    }
-        
-        // Função para fechar o pop-up
-    function fecharPopup() {
-            const popup = document.getElementById('popup');
-            popup.classList.remove('show');
-    }

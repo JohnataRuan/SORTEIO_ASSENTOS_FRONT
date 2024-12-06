@@ -10,7 +10,7 @@
 }
 
 body {
-    background-image: url('../../../Assets/Imagens/sl_043021_42650_27.jpg'); /* Substitua pelo caminho da sua imagem */
+    background-image: url('../../Assets/Imagens/sl_043021_42650_27.jpg'); /* Substitua pelo caminho da sua imagem */
     background-size: cover; /* Faz com que a imagem cubra toda a tela */
     background-repeat: no-repeat; /* Evita repetição da imagem */
     background-position: center; /* Centraliza a imagem */
@@ -139,52 +139,4 @@ input {
 /* Borda vermelha apenas para campos com erro após interação */
 input.touched.invalid {
     border-color: red;
-}
-
-/* Estilos para o pop-up */
-.popup {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    min-width: 250px;
-    padding: 15px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-    z-index: 1000;
-}
-
-.popup.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.popup-icon {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.popup-message {
-    flex: 1;
-}
-
-.popup-close {
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    color: inherit;
-}
-
-.popup-success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.popup-error {
-    background-color: #f8d7da;
-    color: #721c24;
 }

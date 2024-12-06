@@ -9,7 +9,7 @@
 }
 
 body {
-    background-image: url('../../../Assets/Imagens/sl_043021_42650_27.jpg');
+    background-image: url('../../Assets/Imagens/sl_043021_42650_27.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -126,12 +126,7 @@ input {
     }
 }
 
-.error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
-}
+
 
 input {
     border: 1px solid #ccc;
@@ -139,52 +134,12 @@ input {
     transition: border-color 0.3s ease;
 }
 .invalid {
-    border: 1px solid red;  /* Borda vermelha */
+    border: 1px solid red;  /* Borda vermelha para campos inválidos */
 }
 
-.popup {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    min-width: 250px;
-    padding: 15px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-    z-index: 1000;
-}
-
-.popup.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.popup-icon {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.popup-message {
-    flex: 1;
-}
-
-.popup-close {
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    color: inherit;
-}
-
-.popup-success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.popup-error {
-    background-color: #f8d7da;
-    color: #721c24;
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
 }

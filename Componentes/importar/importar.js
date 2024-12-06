@@ -1,3 +1,23 @@
+// Função para carregar o pop-up automaticamente
+async function carregarPopup() {
+    try {
+        // Importar o HTML do pop-up
+        const response = await fetch('../popup/popup.css');
+        const popupHTML = await response.text();
+        document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+        // Adicionar o CSS dinamicamente
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = '../popup/popup.css';
+        document.head.appendChild(cssLink);
+
+        // Importar o JavaScript do pop-up
+        await import('../popup/popup.js');
+    } catch (error) {
+        console.error('Erro ao carregar o pop-up:', error);
+    }
+}
 
 function importarTurma() {
     const importacaoBemSucedida = true; // Simula o sucesso da importação
@@ -39,9 +59,6 @@ async function importarCabecalho() {
     }
 }
 
-// Chame a função para importar o cabeçalho quando a página carregar
-window.addEventListener('DOMContentLoaded', importarCabecalho);
-
 // Função para adicionar o rodapé do site
 async function importarRodape() {
     try {
@@ -60,6 +77,15 @@ async function importarRodape() {
         console.error('Erro ao importar o rodapé:', error);
     }
 }
+
+
+// Chame a função para importar o rodapé quando a página carregar
+window.addEventListener('DOMContentLoaded', importarRodape);
+// Chame a função para importar o cabeçalho quando a página carregar
+window.addEventListener('DOMContentLoaded', importarCabecalho);
+// Carregar o pop-up assim que a página for carregada
+carregarPopup();
+
 
 // Função que atualiza a cor do botão
 function updateButtonColor() {
@@ -80,9 +106,6 @@ function updateButtonColor() {
 document.getElementById('qualSerie').addEventListener('change', updateButtonColor);
 document.getElementById('turmaDesejada').addEventListener('change', updateButtonColor);
 document.getElementById('fileInput').addEventListener('change', updateButtonColor);
-
-// Chame a função para importar o rodapé quando a página carregar
-window.addEventListener('DOMContentLoaded', importarRodape);
 
 //Código para atualizar turmas ao selecionar o tipo de ensino
 document.addEventListener("DOMContentLoaded", function() {
@@ -128,30 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-    // Função para exibir o pop-up
-function mostrarPopup(mensagem, tipo) {
-    const popup = document.getElementById('popup');
-    const popupMessage = document.getElementById('popupMessage');
-    const popupIcon = document.getElementById('popupIcon');
-
-    popupMessage.textContent = mensagem;
-    if (tipo === 'success') {
-        popup.className = 'popup popup-success show';
-        popupIcon.textContent = '✔️';
-    } else if (tipo === 'error') {
-        popup.className = 'popup popup-error show';
-        popupIcon.textContent = '❌';
-    }
-
-    setTimeout(fecharPopup, 4000);
-}
-
-// Função para fechar o pop-up
-function fecharPopup() {
-    const popup = document.getElementById('popup');
-    popup.classList.remove('show');
-}
 
 document.addEventListener('DOMContentLoaded', function () {
     const uploadFile = async (event) => {

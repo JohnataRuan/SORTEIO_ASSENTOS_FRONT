@@ -1,37 +1,34 @@
+import {validarEmail,validarSenha} from '../../utils/validarLogin.js';
+
+// Função para carregar o pop-up automaticamente
+async function carregarPopup() {
+    try {
+        // Importar o HTML do pop-up
+        const response = await fetch('../popup/popup.html');
+        const popupHTML = await response.text();
+        document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+        // Adicionar o CSS dinamicamente
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = '../popup/popup.css';
+        document.head.appendChild(cssLink);
+
+        // Importar o JavaScript do pop-up
+        await import('../popup/popup.js');
+    } catch (error) {
+        console.error('Erro ao carregar o pop-up:', error);
+    }
+}
+// Carregar o pop-up assim que a página for carregada
+carregarPopup();
 // Redireciona o Login --> Página de Login
 document.getElementById("cadastrar").addEventListener("click", function () {
     window.location.href = "../cadastro/cadastro.html";
 });
 
-
 // Ao clickar em entrar chama a função que envia dados para o backEnd
 document.getElementById('entrar').addEventListener('click', enviarDados);
-
-
-    // Função para exibir o pop-up
-function mostrarPopup(mensagem, tipo) {
-    console.log("Poupop chamado!")
-        const popup = document.getElementById('popup');
-        const popupMessage = document.getElementById('popupMessage');
-        const popupIcon = document.getElementById('popupIcon');
-    
-        popupMessage.textContent = mensagem;
-        if (tipo === 'success') {
-            popup.className = 'popup popup-success show';
-            popupIcon.textContent = '✔️';
-        } else if (tipo === 'error') {
-            popup.className = 'popup popup-error show';
-            popupIcon.textContent = '❌';
-        }
-    
-        setTimeout(fecharPopup, 3000);
-}
-    
-    // Função para fechar o pop-up
-function fecharPopup() {
-        const popup = document.getElementById('popup');
-        popup.classList.remove('show');
-}
 
 // Função para adicionar validação dinâmica com interação
 function monitorarCampo(campoId, funcaoValidacao) {
@@ -55,41 +52,6 @@ function monitorarCampo(campoId, funcaoValidacao) {
     });
 }
 
-// Validações específicas
-function validarEmail() {
-    const email = document.getElementById('email').value.trim();
-    const emailErro = document.getElementById('emailErro');
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email) {
-        emailErro.textContent = 'O campo email é obrigatório.';
-        return false;
-    } else if (!emailRegex.test(email)) {
-        emailErro.textContent = 'Digite um email válido.';
-        return false;
-    }
-
-    emailErro.textContent = '';
-    return true;
-}
-
-function validarSenha() {
-    const senha = document.getElementById('senha').value;
-    const senhaErro = document.getElementById('senhaErro');
-    const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!senha) {
-        senhaErro.textContent = 'O campo senha é obrigatório.';
-        return false;
-    } else if (!senhaRegex.test(senha)) {
-        senhaErro.textContent =
-            'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.';
-        return false;
-    }
-
-    senhaErro.textContent = '';
-    return true;
-}
 
 // Adiciona monitoramento para email e senha
 monitorarCampo('email', validarEmail);
@@ -131,7 +93,7 @@ async function enviarDados() {
 
             // Redireciona após 3 segundos
             setTimeout(() => {
-                window.location.href = '../../principal/principal.html'; // Caminho ajustado
+                window.location.href = '../principal/principal.html'; // Caminho ajustado
             }, 3000);
         } else {
             // Exibir mensagem de erro do servidor

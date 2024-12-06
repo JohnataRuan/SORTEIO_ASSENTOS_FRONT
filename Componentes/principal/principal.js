@@ -60,27 +60,3 @@ document.getElementById("BotaoDownload").addEventListener("click", function () {
     window.location.href = "../download/download.html";
 });
 
-
-                        // Mensagens de Error
-
-//Funções da mensagem de Error
-function mostrarErro(titulo, mensagem) {
-    console.log("Chamou mostrarErro com:", titulo, mensagem); // Log para verificar se está sendo chamado
-
-    const tituloElemento = document.getElementById('tituloErro');
-    const mensagemElemento = document.getElementById('mensagemErro');
-    const erroElemento = document.getElementById('erro');
-
-    // Atualiza os elementos com os dados da mensagem
-    tituloElemento.textContent = titulo;
-    mensagemElemento.textContent = mensagem;
-
-    // Torna o elemento de erro visível
-    erroElemento.style.display = 'block';
-}
-
-// Função para fechar a mensagem de erro
-function fecharErro() {
-    const erroElemento = document.getElementById('erro');
-    erroElemento.style.display = 'none';
-}
