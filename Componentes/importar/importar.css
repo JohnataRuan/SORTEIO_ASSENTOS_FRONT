@@ -1,0 +1,233 @@
+/*Link das fontes do site, ligado diretamente com o Google provavelmente não funciona com ausência de internet*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+/*Configuração do site no geral*/
+* {
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+}
+/*Configuração de aparencia do Corpo do site*/
+Body {
+    Background: #FFFFFF;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:10%;
+     }
+
+     
+/*Configuração de aparencia do h1 do site*/
+h1 {order:2;
+    text-align: center;
+    font-family: 'Inter';
+    font-weight: 800;
+    font-size: 40px;
+    color: #2D2926;
+    z-index: 9;
+    margin-top: 15%;
+}
+/*Configuração de aparencia da descrição da segunda página*/
+.texto-importar {
+    order:2;
+    margin-top: 1%;
+    margin-bottom: 40px;
+    text-align: center;
+    font-family: 'Inter';
+    font-size: 20px;
+    color: #827F75;
+    line-height: 1.6;
+      max-width: 80%; /* Limita a largura do conteúdo */
+      margin: 0 auto; /* Centraliza na tela */
+      padding: 20px;
+      text-align: center;
+}
+/*Barra a qual contém os selects e os imputs a qual o usuário vai inserir os dados*/
+.Barra-import {
+    order:3;
+    width:80%;
+    display: flex;
+    height:60%;
+    margin-top: 3%;
+    padding: 3% 3% 3% 3%;
+    background-color: #F7F7F7;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content:center;
+    gap:4%;
+}
+/*Parte de cima dessa barra*/
+.Cima {
+    order:1;
+    width: 1000px;
+    flex-direction:column;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+
+
+}
+/*Parte da configurão da aparencia da parte de selecionar ensino*/
+.Texto-ensino {
+    order:1;
+}
+.Tipo-ensino {
+    order:2;
+    width: 997px;
+    margin-top:2%;
+    padding: 15px;
+    font-size: 18px;
+}
+/*Parte da configurão da aparencia da parte esquerda da barra*/
+.lado-esquerdo {
+    order:2;
+    flex-direction: column;
+}
+/*Parte da configurão da aparencia da parte direita da barra*/
+.lado-direito {
+    order:3;
+    flex-direction: column;
+}
+label {
+    font-family: 'Inter';
+    font-weight: 600;
+    color: #827F75;
+}
+select {
+    width: 475px;
+    margin-top:2%;
+    padding: 15px;
+    font-size: 18px;
+    font-family: 'Inter';
+    font-weight: 600;
+    border: 1px solid transparent; 
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
+    
+}
+/* Parte de baixo onde contém os botões */
+.embaixo {
+    display: flex;
+    gap: 10px; /* espaço entre os botões */
+    justify-content: flex-start; /* Alinha os botões à esquerda */
+    margin-top: 10%;
+    border: none;
+    flex-direction: row;
+    align-self: start;
+    align-content: space-around;
+    flex-wrap: nowrap;
+    font-family: "Inter";
+    font-weight: 800;
+}
+
+/* Estilo base para os botões */
+.button {
+    width: 100px; /* Largura fixa */
+    height: 50px; /* Altura fixa */
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* Botão de voltar */
+.voltar {
+    order: 1;
+    display: flex;
+    font-family: "Inter";
+    font-weight: 800;
+    justify-content: center; /* Centraliza o texto */
+    align-items: center; /* Centraliza o texto verticalmente */
+    background-color: #FFFFFF;
+    padding: 0; /* Removendo padding específico */
+    width: 100px; /* Ajuste de largura para 100px */
+    height: 50px; /* Ajuste de altura para 50px */
+    border-radius: 5px;
+    font-size: 16px;
+    color: #0253A4;
+    border: 1px solid transparent;
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+.voltar:hover {
+    transform: scale(1.05);
+}
+
+/* Botão de importar */
+.importar {
+    order: 2;
+    display: flex;
+    font-family: "Inter";
+    font-weight: 800;
+    justify-content: center; /* Centraliza o texto */
+    align-items: center; /* Centraliza o texto verticalmente */
+    width: 100px; /* Ajuste de largura para 100px */
+    height: 50px; /* Ajuste de altura para 50px */
+    background-color: #0253A4;
+    padding: 0; /* Removendo padding específico */
+    border-radius: 5px;
+    font-size: 16px;
+    color: #F7F7F7;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+    position: relative;
+    text-align: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
+    align-content: center;
+}
+.importar:hover {
+    transform: scale(1.05);
+}
+
+.botaoImportar {
+    order: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Inter";
+    font-weight: 800;
+    color: #F7F7F7;
+    cursor: pointer;
+}
+
+.botaoForm {
+    border: none;
+}
+
+/* Botão de salvar */
+.salvar {
+    order: 3;
+    display: flex;
+    justify-content: center; /* Centraliza o texto */
+    align-items: center; /* Centraliza o texto verticalmente */
+    width: 100px; /* Ajuste de largura para 100px */
+    height: 50px; /* Ajuste de altura para 50px */
+    font-weight: bold;
+    background-color: #827F75;
+    padding: 0; /* Removendo padding específico */
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Inter";
+    font-weight: 800;
+    color: #F7F7F7;
+    border: 1px solid transparent;
+    box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+.salvar:hover {
+    transform: scale(1.05);
+}
+
+

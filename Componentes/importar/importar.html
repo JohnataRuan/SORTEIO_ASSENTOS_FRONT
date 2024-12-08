@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="importar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="/Assets/Imagens/logo.png">
+    <title>Mapa de Sala - Lourdinas</title>
+</head>
+
+<body>
+    <!-- Título da Segunda Página e sua descrição-->
+    <h1>Importar Arquivos</h1>
+    <p class='texto-importar'>Carregue uma planilha com os nomes dos alunos e suas
+        respectivas turmas para realizar o sorteio de assentos e gerar o 
+       mapa de assentos.O arquivo importado deve ser do tipo CSV.
+       </p>
+    
+    <!-- Barra onde contém os inputs a qual o usuário vai inserir os valores das salas importadas-->
+    <form class='Barra-import'>
+        <!-- Parte de cima dessa barra -->
+        <div class="Cima">
+            <label for="tipoEnsino" class="Texto-ensino">Selecione o Ensino desejado:</label><br>
+            <select id="tipoEnsino" class="Tipo-ensino" name="ensino">
+                <option value="medio">Médio</option>
+                <option value="fundamental">Fundamental</option>
+            </select><br><br>
+        </div>
+
+        <!-- Parte da direita dessa barra -->
+        <div class='lado-direito'>
+            <label for="turmaDesejada">Selecione a turma desejada:</label><br>
+            <select id="turmaDesejada" name="turma">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select><br><br>
+        </div>
+
+        <!-- Parte da esquerda dessa barra -->
+        <div class='lado-esquerdo'>
+            <label for="qualSerie">Selecione a série desejada:</label><br>
+            <div class='turma1'>
+                <select id="qualSerie" name="serie">
+                </select><br><br>
+            </div>
+
+            <!-- Parte de baixo dessa barra -->
+            <div class="embaixo">
+                <div class="voltar" id="voltar">Voltar</div>
+
+                <!-- Botão de importar com algumas exigências -->
+                <div class="importar">
+                    <form id="uploadForm" enctype="multipart/form-data" class="botaoForm">
+                        <!-- Aceitar arquivos CSV -->
+                        <input type="file" id="fileInput" name="file" accept=".csv, text/csv" style="display: none;" class="botaoInput">
+                        <button type="button" onclick="document.getElementById('fileInput').click()" class="botaoImportar">Importar</button>
+                    </form>
+                </div>
+
+                <button class='salvar' id="salvar">Salvar</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="importar.js" type="module" defer></script>
+</body>
+</html>
